@@ -1,9 +1,8 @@
 var net = require('net');
-var async = require('async');
 var config = require(__dirname + '/config.json');
 
 
-function esl(command, callback) {
+function apiProxy(command, callback) {
 	var _command = command + '\n\n';
 	var socket = net.connect(config.port, config.host);
 	socket.setEncoding('utf8');
@@ -22,4 +21,4 @@ function esl(command, callback) {
 };
 
 
-module.exports = esl;
+module.exports = apiProxy;

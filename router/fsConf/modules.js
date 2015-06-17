@@ -2,26 +2,28 @@ var fs = require('fs');
 var config = require(__dirname + '/config.json');
 
 function commentModule(content, moduleName) {
+	var ret = null;
 	var commented = '<!--<load module="' + moduleName + '"/>-->';
 	var uncommented = '<load module="' + moduleName + '"/>';
 
 	if (content.indexOf(commented) == -1) {
-		content = content.replace(uncommented, commented);
+		ret = content.replace(uncommented, commented);
 	}
 
-	return content;
+	return ret;
 }
 
 function uncommentModule(content, moduleName) {
+	var ret = null;
 	var commented = '<!--<load module="' + moduleName + '"/>-->';
 	var uncommented = '<load module="' + moduleName + '"/>';
 
 	if (content.indexOf(commented) != -1) {	
-		content = content.replace(commented, uncommented);
+		ret = content.replace(commented, uncommented);
 	}
 
 	console.log(content);
-	return content;
+	return ret;
 }
 
 function route(server) {
@@ -50,8 +52,11 @@ function route(server) {
 				if (loadList instanceof Array) {
 					loadList.forEach(function(moduleName) {
 						if (typeof(moduleName) == 'string') {
-							data = uncommentModule(data, moduleName);
-							dirty = true;
+							var ret = uncommentModule(data, moduleName);
+							if (ret) {
+								data = ret;
+								dirty = true;
+							}
 						}
 					});
 				}
@@ -62,8 +67,11 @@ function route(server) {
 				if (unloadList instanceof Array) {
 					unloadList.forEach(function(moduleName) {
 						if (typeof(moduleName) == 'string') {
-							data = commentModule(data, moduleName);
-							dirty = true;
+							var ret = commentModule(data, moduleName);
+							if (ret) {
+								data = ret;
+								dirty = true;
+							}
 						}
 					});
 				}
